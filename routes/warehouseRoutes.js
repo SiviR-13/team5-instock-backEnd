@@ -2,25 +2,27 @@ import express from "express";
 const router = express.Router();
 
 //Creating routes for warehouse
-router.get("/",(req,res)=>{
+router.route("/")
+  .get((req,res)=>{
     res.send('Get all warehouses');
-});
+  })
+  .post((req, res) => {
+    res.send("CREATE a new warehouse");
+  });
 
-router.get("/:id",(req,res)=>{
+router.route("/:id")
+  .get((req,res)=>{
     res.send(`GET warehouse with ID: ${req.params.id}`);
-});
+  })
+  .put((req, res) => {
+    res.send(`UPDATE warehouse with ID: ${req.params.id}`);
+  })
+  .delete((req, res) => {
+    res.send(`DELETE warehouse with ID: ${req.params.id}`);
+  });
 
 router.get("/:id/inventory", (req, res) => {
     res.send(`GET inventory for warehouse with ID: ${req.params.id}`);
   });
 
-  router.put("/:id", (req, res) => {
-    res.send(`UPDATE warehouse with ID: ${req.params.id}`);
-  });
-  router.delete("/:id", (req, res) => {
-    res.send(`DELETE warehouse with ID: ${req.params.id}`);
-  });
-  router.post("/", (req, res) => {
-    res.send("CREATE a new warehouse");
-  });
-  module.exports = router;
+export default router;
