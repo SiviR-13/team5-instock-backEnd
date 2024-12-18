@@ -22,7 +22,7 @@ router.route("/:id")
     res.send(`DELETE inventory with ID: ${req.params.id}`);
   });
 
-router.get("/:id/inventory", (req, res) => {
+router.get("/:id/inventories", (req, res) => {
   res.send(`GET inventory for inventory with ID: ${req.params.id}`);
 });
 

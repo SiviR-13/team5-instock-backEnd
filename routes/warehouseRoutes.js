@@ -1,5 +1,6 @@
 import express from "express";
 import * as warehousesController from '../controllers/warehouses-controller.js'
+import { getInventoriesByWarehouseId } from "../controllers/inventory-controller.js";
 const router = express.Router();
 
 //Creating routes for warehouse
@@ -21,8 +22,6 @@ router.route("/:id")
     res.send(`DELETE warehouse with ID: ${req.params.id}`);
   });
 
-router.get("/:id/inventory", (req, res) => {
-  res.send(`GET inventory for warehouse with ID: ${req.params.id}`);
-});
+router.get("/:id/inventory", getInventoriesByWarehouseId);
 
 export default router;
