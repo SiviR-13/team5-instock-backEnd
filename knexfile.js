@@ -10,4 +10,12 @@ export default {
     password: process.env.DB_PASSWORD,
     charset: "utf8",
   },
-};
+
+migrations: {
+  directory: './migrations',
+},
+seeds: {
+  directory: './seeds',
+},
+}
+
