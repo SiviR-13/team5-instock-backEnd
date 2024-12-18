@@ -1,6 +1,8 @@
-// Import dotenv to process environment variables from `.env` file.
 import "dotenv/config";
 
+/**
+ * @type { Object.<string, import("knex").Knex.Config> }
+ */
 export default {
   client: "mysql2",
   connection: {
@@ -8,14 +10,12 @@ export default {
     database: process.env.DB_NAME,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
-    charset: "utf8",
   },
 
-migrations: {
-  directory: './migrations',
-},
-seeds: {
-  directory: './seeds',
-},
-}
-
+  migrations: {
+    directory: "./migrations",
+  },
+  seeds: {
+    directory: "./seeds",
+  },
+};

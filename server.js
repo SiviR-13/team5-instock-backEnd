@@ -14,9 +14,9 @@ app.use(cors()); //To allow cross origin requests
 app.use(express.json()); //To parse JSON request bodies
 
 //Import routes
-app.use("/warehouses", warehouseRoutes);
-app.use("/inventories", inventoryRoutes);
-// Server Port
+
+app.use("/warehouses", warehouseRoutes)
+app.use("/inventories", inventoryRoutes)
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

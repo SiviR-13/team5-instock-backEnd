@@ -1,18 +1,16 @@
 import express from "express";
+import * as warehousesController from '../controllers/warehouses-controller.js'
 const router = express.Router();
 
 //Creating routes for warehouse
-router
-  .route("/")
-  .get((req, res) => {
-    res.send("Get all warehouses");
-  })
+router.route("/")
+  .get(warehousesController.index)
+  
   .post((req, res) => {
     res.send("CREATE a new warehouse");
   });
 
-router
-  .route("/:id")
+router.route("/:id")
   .get((req, res) => {
     res.send(`GET warehouse with ID: ${req.params.id}`);
   })
