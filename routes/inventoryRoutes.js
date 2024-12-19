@@ -1,4 +1,5 @@
 import express from "express";
+import * as inventoryController from "../controllers/inventory-controller.js";
 import fs from "fs";
 const router = express.Router();
 
