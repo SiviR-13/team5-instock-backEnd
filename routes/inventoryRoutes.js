@@ -3,15 +3,15 @@ import fs from "fs";
 const router = express.Router();
 
 //Creating routes for inventory
-router.route("/")
-  .get((req, res) => {
-    res.send("Get all inventory");
-  })
+router
+  .route("/")
+  .get(inventoryController.getAllInventories)
   .post((req, res) => {
     res.send("CREATE a new inventory");
   });
 
-router.route("/:id")
+router
+  .route("/:id")
   .get((req, res) => {
     res.send(`GET inventory with ID: ${req.params.id}`);
   })
