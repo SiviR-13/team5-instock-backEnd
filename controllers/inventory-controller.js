@@ -49,6 +49,7 @@ export const getInventoryById = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
 export const getInventoriesByWarehouseId = async (req, res) => {
   const warehouseId = req.params.id;
 
