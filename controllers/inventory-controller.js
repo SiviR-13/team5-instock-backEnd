@@ -3,7 +3,7 @@ import configuration from "../knexfile.js";
 
 const knex = initKnex(configuration);
 
-export const getInventoriesByWarehouseId = async (req, res) => {
+const getInventoriesByWarehouseId = async (req, res) => {
     const warehouseId = req.params.id;
 
     try {
@@ -26,3 +26,5 @@ export const getInventoriesByWarehouseId = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
 }
 };
+
+export {getInventoriesByWarehouseId}

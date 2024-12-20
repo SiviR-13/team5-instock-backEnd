@@ -4,23 +4,19 @@ import { getInventoriesByWarehouseId } from "../controllers/inventory-controller
 const router = express.Router();
 
 //Creating routes for warehouse
-router
-  .route("/")
-  .get(warehousesController.index)
+router.route("/")
+  .get(warehousesController.fetchWarehouses)
 
   .post((req, res) => {
     res.send("CREATE a new warehouse");
   });
 
-router
-  .route("/:id")
+router.route("/:id")
   .get(warehousesController.getWarehouseById) // Use the controller to get warehouse by ID
   .put((req, res) => {
     res.send(`UPDATE warehouse with ID: ${req.params.id}`);
   })
-  .delete((req, res) => {
-    res.send(`DELETE warehouse with ID: ${req.params.id}`);
-  });
+  .delete(warehousesController.deleteWarehouseById);
 
 router.get("/:id/inventory", getInventoriesByWarehouseId);
 
