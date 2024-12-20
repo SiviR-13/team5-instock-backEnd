@@ -5,13 +5,25 @@ const knex = initKnex(configuration);
 
 // Fetch all inventories
 export const getAllInventories = async (req, res) => {
-  try {
-    const inventories = await knex("inventories").select("*");
-    res.status(200).json(inventories);
-  } catch (error) {
-    res.status(404).send(`Inventories not found: ${error.message}`);
-  }
-};
+    try {
+      // Fetch inventories joined with warehouse names
+      const inventories = await knex("inventories")
+        .join("warehouses", "inventories.warehouse_id", "warehouses.id")
+        .select(
+          "inventories.id",
+          "warehouses.warehouse_name AS warehouse_name",
+          "inventories.item_name",
+          "inventories.description",
+          "inventories.category",
+          "inventories.status",
+          "inventories.quantity"
+        );
+  
+      res.status(200).json(inventories);
+    } catch (error) {
+      res.status(500).send(`Error fetching inventories: ${error.message}`);
+    }
+  };
 
 export const getInventoriesByWarehouseId = async (req, res) => {
   const warehouseId = req.params.id;
