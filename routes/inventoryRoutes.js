@@ -1,20 +1,20 @@
 import express from "express";
 import fs from "fs";
+import * as inventoryController from "../controllers/inventory-controller.js";
 const router = express.Router();
 
 //Creating routes for inventory
-router.route("/")
-  .get((req, res) => {
-    res.send("Get all inventory");
-  })
+router
+  .route("/")
+  .get(inventoryController.getAllInventories)
   .post((req, res) => {
     res.send("CREATE a new inventory");
   });
 
-router.route("/:id")
-  .get((req, res) => {
-    res.send(`GET inventory with ID: ${req.params.id}`);
-  })
+// Route for fetching, updating, and deleting a single inventory by ID
+router
+  .route("/:id")
+  .get(inventoryController.getInventoryById)
   .put((req, res) => {
     res.send(`UPDATE inventory with ID: ${req.params.id}`);
   })
