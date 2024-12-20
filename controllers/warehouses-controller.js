@@ -28,7 +28,7 @@ export const getWarehouseById = async (req, res) => {
   }
 };
 
-const deleteWarehouseById = async (req, res) => {
+export const deleteWarehouseById = async (req, res) => {
     try {
       const rowsDeleted = await knex("warehouses")
         .where({ id: req.params.id })
@@ -47,8 +47,6 @@ const deleteWarehouseById = async (req, res) => {
       });
     }
   };
-
-export { fetchWarehouses, getWarehouseById, deleteWarehouseById };
 
 // Edit warehouse
 export const editWarehouse = async (req, res) => {
