@@ -12,6 +12,9 @@ router
     res.send("CREATE a new warehouse");
   });
 
+// Edit warehouse
+router.put("/:id", warehousesController.editWarehouse);
+
 router
   .route("/:id")
   .get(warehousesController.getWarehouseById) // Use the controller to get warehouse by ID

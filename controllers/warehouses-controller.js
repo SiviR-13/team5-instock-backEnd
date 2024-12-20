@@ -3,7 +3,7 @@ import configuration from "../knexfile.js";
 const knex = initKnex(configuration);
 
 // Fetch all warehouses
-const index = async (req, res) => {
+export const index = async (req, res) => {
   try {
     const data = await knex("warehouses");
     res.status(200).json(data);
@@ -13,7 +13,7 @@ const index = async (req, res) => {
 };
 
 // Fetch a specific warehouse by ID
-const getWarehouseById = async (req, res) => {
+export const getWarehouseById = async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -28,4 +28,74 @@ const getWarehouseById = async (req, res) => {
   }
 };
 
-export { index, getWarehouseById };
+// Edit warehouse
+export const editWarehouse = async (req, res) => {
+  const warehouseId = req.params.id;
+  const {
+    warehouse_name,
+    address,
+    city,
+    country,
+    contact_name,
+    contact_position,
+    contact_phone,
+    contact_email,
+  } = req.body;
+
+  // Validate request body
+  if (
+    !warehouse_name ||
+    !address ||
+    !city ||
+    !country ||
+    !contact_name ||
+    !contact_position ||
+    !contact_phone ||
+    !contact_email
+  ) {
+    return res.status(400).json({ message: "All fields are required." });
+  }
+
+  // Validate phone number (basic regex)
+  const phoneRegex = /^\+1\s\(\d{3}\)\s\d{3}-\d{4}$/;
+  if (!phoneRegex.test(contact_phone)) {
+    return res.status(400).json({ message: "Invalid phone number format." });
+  }
+
+  // Validate email (basic regex)
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(contact_email)) {
+    return res.status(400).json({ message: "Invalid email format." });
+  }
+
+  try {
+    // Check if the warehouse exists
+    const warehouseExists = await knex("warehouses")
+      .select("id")
+      .where({ id: warehouseId })
+      .first();
+
+    if (!warehouseExists) {
+      return res.status(404).json({ message: "Warehouse not found." });
+    }
+
+    // Update the warehouse
+    const updatedWarehouse = {
+      warehouse_name,
+      address,
+      city,
+      country,
+      contact_name,
+      contact_position,
+      contact_phone,
+      contact_email,
+    };
+
+    await knex("warehouses").where({ id: warehouseId }).update(updatedWarehouse);
+
+    // Return the updated warehouse data
+    res.status(200).json({ id: warehouseId, ...updatedWarehouse });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
