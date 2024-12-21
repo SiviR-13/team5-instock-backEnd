@@ -7,18 +7,13 @@ const router = express.Router();
 router.route("/")
   .get(warehousesController.fetchWarehouses)
 
-  .post((req, res) => {
-    res.send("CREATE a new warehouse");
-  });
-
-// Edit warehouse
-router.put("/:id", warehousesController.editWarehouse);
+  .post(warehousesController.addWarehouse)  
 
 router.route("/:id")
   .get(warehousesController.getWarehouseById) // Use the controller to get warehouse by ID
-  .put((req, res) => {
-    res.send(`UPDATE warehouse with ID: ${req.params.id}`);
-  })
+
+  .put(warehousesController.editWarehouse)
+
   .delete(warehousesController.deleteWarehouseById);
 
 router.get("/:id/inventory", getInventoriesByWarehouseId);
