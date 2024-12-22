@@ -72,3 +72,70 @@ export const getInventoriesByWarehouseId = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+export const editInventory = async (req, res) => {
+  const inventoryId = req.params.id;
+  const { warehouse_id, item_name, description, category, status, quantity } =
+    req.body;
+
+  if (
+    !warehouse_id ||
+    !item_name ||
+    !description ||
+    !category ||
+    !status ||
+    !quantity
+  ) {
+    return res.status(400).json({ message: "All fields are required." });
+  }
+
+  if (isNaN(quantity) || Number(quantity) < 0) {
+    return res
+      .status(400)
+      .json({ message: "Quantity must be a non-negative, numeric value." });
+  }
+
+  if (!Number.isInteger(Number(quantity))) {
+    return res
+      .status(400)
+      .json({ message: "Quantity must be a whole number." });
+  }
+
+  const warehouseExists = await knex("warehouses")
+    .select("id")
+    .where({ id: warehouse_id })
+    .first();
+
+  if (!warehouseExists) {
+    return res.status(400).json({ message: "Invalid warehouse_id. Warehouse not found." });
+  }
+
+  try {
+    const inventoryExists = await knex("inventories")
+      .select("id")
+      .where({ id: inventoryId })
+      .first();
+
+    if (!inventoryExists) {
+      return res.status(404).json({ message: "Inventory item not found." });
+    }
+
+    const updatedInventory = {
+      warehouse_id,
+      item_name,
+      description,
+      category,
+      status,
+      quantity,
+    };
+
+    await knex("inventories")
+      .where({ id: inventoryId })
+      .update(updatedInventory);
+
+    // Return the updated warehouse data
+    res.status(200).json({ id: inventoryId, ...updatedInventory });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
