@@ -29,24 +29,24 @@ export const getWarehouseById = async (req, res) => {
 };
 
 export const deleteWarehouseById = async (req, res) => {
-    try {
-      const rowsDeleted = await knex("warehouses")
-        .where({ id: req.params.id })
-        .delete();
-  
-      if (rowsDeleted === 0) {
-        return res
-          .status(404)
-          .json({ message: `Warehouse with ID ${req.params.id} not found` });
-      }
-  
-      res.status(204).json("Warehouse deleted successfully");
-    } catch (error) {
-      res.status(500).json({
-        message: `Unable to delete warehouse: ${error}`
-      });
+  try {
+    const rowsDeleted = await knex("warehouses")
+      .where({ id: req.params.id })
+      .delete();
+
+    if (rowsDeleted === 0) {
+      return res
+        .status(404)
+        .json({ message: `Warehouse with ID ${req.params.id} not found` });
     }
-  };
+
+    res.status(204).json("Warehouse deleted successfully");
+  } catch (error) {
+    res.status(500).json({
+      message: `Unable to delete warehouse: ${error}`,
+    });
+  }
+};
 
 // Edit warehouse
 export const editWarehouse = async (req, res) => {
@@ -111,10 +111,76 @@ export const editWarehouse = async (req, res) => {
       contact_email,
     };
 
-    await knex("warehouses").where({ id: warehouseId }).update(updatedWarehouse);
+    await knex("warehouses")
+      .where({ id: warehouseId })
+      .update(updatedWarehouse);
 
     // Return the updated warehouse data
     res.status(200).json({ id: warehouseId, ...updatedWarehouse });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+export const addWarehouse = async (req, res) => {
+  const {
+    warehouse_name,
+    address,
+    city,
+    country,
+    contact_name,
+    contact_position,
+    contact_phone,
+    contact_email,
+  } = req.body;
+
+  // Validate request body
+  if (
+    !warehouse_name ||
+    !address ||
+    !city ||
+    !country ||
+    !contact_name ||
+    !contact_position ||
+    !contact_phone ||
+    !contact_email
+  ) {
+    return res.status(400).json({ message: "All fields are required." });
+  }
+
+  // Validate phone number (basic regex)
+  const phoneRegex = /^\+1\s\(\d{3}\)\s\d{3}-\d{4}$/;
+  if (!phoneRegex.test(contact_phone)) {
+    return res.status(400).json({ message: "Invalid phone number format." });
+  }
+
+  // Validate email (basic regex)
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(contact_email)) {
+    return res.status(400).json({ message: "Invalid email format." });
+  }
+
+  // add the warehouse
+  try {
+    const newWarehouse = {
+      warehouse_name,
+      address,
+      city,
+      country,
+      contact_name,
+      contact_position,
+      contact_phone,
+      contact_email,
+    };
+
+    const [insertedWarehouseId] = await knex("warehouses").insert(newWarehouse);
+
+    const addedWarehouse = await knex("warehouses")
+      .where({ id: insertedWarehouseId })
+      .first();
+
+    // Return the new warehouse data
+    res.status(201).json({ message: "Warehouse added successfully", warehouse: addedWarehouse});
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
