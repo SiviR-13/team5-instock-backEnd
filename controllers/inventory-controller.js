@@ -1,6 +1,5 @@
 import initKnex from "knex";
 import configuration from "../knexfile.js";
-import { createConnection } from "mysql2";
 
 const knex = initKnex(configuration);
 
@@ -139,7 +138,6 @@ export const editInventory = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
-<<<<<<< HEAD
   
 
 }
@@ -221,25 +219,3 @@ export const editInventory = async (req, res) => {
   };
   
 
-=======
-};
-
-// Delete request
-export const deleteInventory = async (req, res) => {
-  const inventoryId = req.params.id;
-
-  try {
-    const result = await knex("inventories")
-      .where({ id: inventoryId })
-      .del();
-
-    if (!result) {
-      return res.status(404).json({ message: "Inventory item not found." });
-    }
-
-    res.status(204).send();
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
-  }
-};
->>>>>>> develop
