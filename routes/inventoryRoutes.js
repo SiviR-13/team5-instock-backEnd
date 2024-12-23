@@ -17,12 +17,12 @@ router.route("/:id")
 
   .put(inventoryController.editInventory)
   
-  .delete((req, res) => {
-    res.send(`DELETE inventory with ID: ${req.params.id}`);
-  });
+  .delete(inventoryController.deleteInventory);
 
 router.get("/:id/inventories", (req, res) => {
   res.send(`GET inventory for inventory with ID: ${req.params.id}`);
 });
+
+
 
 export default router;
