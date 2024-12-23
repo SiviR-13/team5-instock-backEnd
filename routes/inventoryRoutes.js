@@ -7,9 +7,7 @@ const router = express.Router();
 router.route("/")
   .get(inventoryController.getAllInventories)
 
-  .post((req, res) => {
-    res.send("CREATE a new inventory");
-  });
+  .post(inventoryController.addInventory)  
 
 // Route for fetching, updating, and deleting a single inventory by ID
 router.route("/:id")

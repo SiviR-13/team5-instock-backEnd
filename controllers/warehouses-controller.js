@@ -185,3 +185,70 @@ export const addWarehouse = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+export const addInventory = async (req, res) => {
+  const {
+    warehouse_id,
+    item_name,
+    description,
+    category,
+    status,
+    quantity,
+  } = req.body;
+
+  // Validate request body
+  if (
+    !warehouse_id ||
+    !item_name ||
+    !description ||
+    !category ||
+    !status ||
+    quantity === undefined
+  ) {
+    return res.status(400).json({ message: "All fields are required." });
+  }
+
+  // Validate quantity (must be a number)
+  if (typeof quantity !== "number") {
+    return res.status(400).json({ message: "Quantity must be a number." });
+  }
+
+  // Validate warehouse_id existence
+  try {
+    const warehouseExists = await knex("warehouses")
+      .where({ id: warehouse_id })
+      .first();
+
+    if (!warehouseExists) {
+      return res.status(400).json({ message: "Invalid warehouse_id." });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: "Server error", error: error.message });
+  }
+
+  // Add inventory item
+  try {
+    const newInventoryItem = {
+      warehouse_id,
+      item_name,
+      description,
+      category,
+      status,
+      quantity,
+    };
+
+    const [insertedItemId] = await knex("inventories").insert(newInventoryItem);
+
+    const addedItem = await knex("inventories")
+      .where({ id: insertedItemId })
+      .first();
+
+    // Return the new inventory item data
+    res.status(201).json({
+      message: "Inventory item added successfully",
+      inventory: addedItem,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
